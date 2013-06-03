@@ -12,7 +12,6 @@ module AriFetch
       :password, :ftp_instance
 
     def initialize(ftp_url, username, password)
-      # new object
       @ftp_url, @username, @password = ftp_url, username, password
       @unread_files = ftp_files - read_files
     end
@@ -26,14 +25,18 @@ module AriFetch
     end
 
     def read_files_from_start(how_many=1)
-      unread_files.first(how_many).each {|file| AriFetch::AriFile.create(name: file).fetch_data(ftp_instance) }
+      fetch_data_from_files(unread_files.first(how_many))
     end
 
     def read_files_from_end(how_many=1)
-      unread_files.last(how_many).each {|file| AriFetch::AriFile.create(name: file).fetch_data(ftp_instance) }
+      fetch_data_from_files(unread_files.last(how_many))
     end
 
     private
+
+    def fetch_data_from_files(files)
+      files.map {|file| AriFetch::AriFile.create(name: file).fetch_data(ftp_instance) }.flatten!
+    end
 
     def fetch!
       login
@@ -56,3 +59,4 @@ end
 
 require "ari_fetch/ari_file.rb"
 require "ari_fetch/files.rb"
+require "ari_fetch/vehicle.rb"
