@@ -25,6 +25,14 @@ module AriFetch
       @ftp_files ||= fetch! rescue @ftp_files = AriFetch::Files.new([]).files
     end
 
+    def read_files_from_start(how_many=1)
+      unread_files.first(how_many).each {|file| AriFetch::AriFile.create(name: file).fetch_data(ftp_instance) }
+    end
+
+    def read_files_from_end(how_many=1)
+      unread_files.last(how_many).each {|file| AriFetch::AriFile.create(name: file).fetch_data(ftp_instance) }
+    end
+
     private
 
     def fetch!

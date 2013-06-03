@@ -20,5 +20,10 @@ describe AriFetch::Engine do
     end
 
   end
+
+  context "reading files and fetching data" do
+    subject { engine }
+    its(:read_files_from_start) { should == "Array" }
+  end
   
 end

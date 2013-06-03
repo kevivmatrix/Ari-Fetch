@@ -4,5 +4,5 @@ source 'https://rubygems.org'
 gemspec
 gem 'rspec'
 
-gem "activesupport"
-gem "rails"
+# gem "activesupport"
+# gem "rails"
