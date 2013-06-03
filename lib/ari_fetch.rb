@@ -1,5 +1,7 @@
 require "ari_fetch/version"
 
+require "active_support/dependencies"
+
 module AriFetch
   class Engine
     def initialize(*args)
