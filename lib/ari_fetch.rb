@@ -20,7 +20,7 @@ module AriFetch
     end
 
     def ftp_files
-      @ftp_files = fetch!# rescue @ftp_files = AriFetch::Files.new([]).files
+      @ftp_files = fetch! rescue @ftp_files = AriFetch::Files.new([]).files
     end
 
     def unread_files
