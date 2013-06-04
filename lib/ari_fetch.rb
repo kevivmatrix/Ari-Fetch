@@ -9,38 +9,33 @@ module AriFetch
   class Engine
 
     attr_accessor :read_files, :unread_files, :ftp_files, :ftp_url, :username,
-      :password, :ftp_instance
+      :password, :ftp_instance, :options
 
-    def initialize(ftp_url, username, password)
-      @ftp_url, @username, @password = ftp_url, username, password
-      @unread_files = ftp_files - read_files
+    def initialize(ftp_url, username, password, options = {})
+      @ftp_url, @username, @password, @options = ftp_url, username, password, options
     end
 
     def read_files
-      @read_files ||= AriFile.pluck(:name) rescue @read_files = AriFetch::Files.new([]).files
+      @read_files = AriFetch::AriReadFile.pluck(:name) rescue @read_files = AriFetch::Files.new([]).files
     end
 
     def ftp_files
-      @ftp_files ||= fetch! rescue @ftp_files = AriFetch::Files.new([]).files
+      @ftp_files = fetch!# rescue @ftp_files = AriFetch::Files.new([]).files
     end
 
-    def read_files_from_start(how_many=1)
-      fetch_data_from_files(unread_files.first(how_many))
+    def unread_files
+      @unread_files = ftp_files - read_files
     end
 
-    def read_files_from_end(how_many=1)
-      fetch_data_from_files(unread_files.last(how_many))
+    def fetch_vehicles_from_files(how_many=1)
+      unread_files.first(how_many).map {|file| AriFetch::AriReadFile.create(name: file).fetch_data(ftp_instance, include_cancel?) }.flatten!
     end
 
     private
 
-    def fetch_data_from_files(files)
-      files.map {|file| AriFetch::AriFile.create(name: file).fetch_data(ftp_instance) }.flatten!
-    end
-
     def fetch!
       login
-      AriFetch::Files.new(ftp_instance.list()).filter!.sort!
+      AriFetch::Files.new(ftp_instance.list()).filter!.sort!(reverse?)
     end
 
     def login
@@ -54,9 +49,17 @@ module AriFetch
       @ftp_instance ||= Net::FTP.new
     end
 
+    def include_cancel?
+      options[:cancel] || false
+    end
+
+    def reverse?
+      options[:reverse_order] || false
+    end
+
   end
 end
 
-require "ari_fetch/ari_file.rb"
+require "ari_fetch/ari_read_file.rb"
 require "ari_fetch/files.rb"
 require "ari_fetch/vehicle.rb"

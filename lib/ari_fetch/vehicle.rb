@@ -9,18 +9,28 @@ module AriFetch
     end
 
     def result
-      OpenStruct.new(
-        {
-          vin_number: vehicle["VIN"]
-        }
-      )
+      OpenStruct.new(vehicle_data_with_downcased_keys)
+    end
+
+    def available?
+      ari_action == "AVAILABLE"
     end
 
     private
 
-    # def method_missing(name, *args)
-    #   vehicle.send(name, *args)
-    # end
+    def vehicle_data_with_downcased_keys
+      downcased_hash = {}
+      vehicle.map{|k, v| downcased_hash.merge!({"#{k.downcase}" => v}) }
+      downcased_hash
+    end
+
+    def vin_number
+      vehicle["VIN"]
+    end
+
+    def ari_action
+      vehicle["ACTION"]
+    end
 
   end
 

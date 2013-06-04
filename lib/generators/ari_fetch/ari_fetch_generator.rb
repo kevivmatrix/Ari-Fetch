@@ -17,6 +17,6 @@ class AriFetchGenerator < Rails::Generators::Base
   end
 
   def create_migration_file
-    migration_template 'migration.rb', 'db/migrate/create_ari_files.rb'
+    migration_template 'migration.rb', 'db/migrate/create_ari_read_files.rb'
   end
 end

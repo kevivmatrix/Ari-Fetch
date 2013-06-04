@@ -1,6 +1,6 @@
-class CreateAriFiles < ActiveRecord::Migration
+class CreateAriReadFiles < ActiveRecord::Migration
   def self.up
-    create_table :ari_files do |t|
+    create_table :ari_read_files do |t|
       t.string :name
 
       t.timestamps
@@ -8,6 +8,6 @@ class CreateAriFiles < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :ari_files
+    drop_table :ari_read_files
   end
 end
