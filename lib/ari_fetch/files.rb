@@ -8,7 +8,7 @@ module AriFetch
     end
 
     def filter!
-      map_to_file_name.select{ |e| !useless_files.include?(e) && e.match(/\.xml\Z/) }
+      @files = map_to_file_name.select{ |e| !useless_files.include?(e) && e.match(/\.xml\Z/) }
       self
     end
 

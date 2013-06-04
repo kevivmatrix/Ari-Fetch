@@ -2,7 +2,7 @@ require "nokogiri"
 
 module AriFetch
   class AriReadFile < ActiveRecord::Base
-    attr_accessible :name
+    attr_accessible :name, :data_read
 
     attr_accessor :content, :vehicles
 
@@ -11,7 +11,7 @@ module AriFetch
       @content = parse!(File.open(name, "r"))
       FileUtils.rm name
       filter_cancel_vehicles! unless include_cancel
-      result
+      result.tap { data_reading_done! }
     end
 
     private
@@ -34,6 +34,10 @@ module AriFetch
 
     def result
       vehicles.map { |vehicle| vehicle.result }
+    end
+
+    def data_reading_done!
+      self.update_attributes(data_read: true)
     end
 
   end
