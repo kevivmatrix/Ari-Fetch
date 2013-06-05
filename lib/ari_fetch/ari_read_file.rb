@@ -4,6 +4,8 @@ module AriFetch
   class AriReadFile < ActiveRecord::Base
     attr_accessible :name, :data_read
 
+    scope :read_done, where("data_read = 1")
+
     attr_accessor :content, :vehicles
 
     def fetch_data(ftp_instance, include_cancel)

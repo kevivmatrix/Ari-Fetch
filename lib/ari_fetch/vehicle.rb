@@ -20,7 +20,9 @@ module AriFetch
 
     def vehicle_data_with_downcased_keys
       downcased_hash = {}
-      vehicle.map{|k, v| downcased_hash.merge!({"#{k.downcase}" => v}) }
+      vehicle.map{|k, v| 
+        downcased_hash.merge!({"#{k.downcase}" => v}) if k && v
+      }
       downcased_hash
     end
 

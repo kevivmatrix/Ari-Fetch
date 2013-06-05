@@ -16,7 +16,7 @@ module AriFetch
     end
 
     def read_files
-      @read_files = AriFetch::AriReadFile.pluck(:name) rescue @read_files = AriFetch::Files.new([]).files
+      @read_files = AriFetch::AriReadFile.read_done.pluck(:name) rescue @read_files = AriFetch::Files.new([]).files
     end
 
     def ftp_files
@@ -28,7 +28,7 @@ module AriFetch
     end
 
     def fetch_vehicles_from_files(how_many=1)
-      unread_files.first(how_many).map {|file| AriFetch::AriReadFile.create(name: file, data_read: false).fetch_data(ftp_instance, include_cancel?) }.flatten!
+      unread_files.first(how_many).map {|file| AriFetch::AriReadFile.where(name: file).first_or_create(data_read: false).fetch_data(ftp_instance, include_cancel?) }.flatten!
     end
 
     private
