@@ -7,15 +7,10 @@ module AriFetch
       @files = files
     end
 
-    def filter!
-      @files = map_to_file_name.select{ |e| !useless_files.include?(e) && e.match(/\.xml\Z/) }
-      self
-    end
-
-    # reverse implies latest date will come first
-    def sort!(reverse=false)
-      return files.sort {|f1, f2| file_date(f1) <=> file_date(f2) } unless reverse
-      files.reverse
+    def filtered_files_in_order(reverse)
+      filter!
+      sort!(reverse)
+      @files
     end
 
     private
@@ -30,6 +25,18 @@ module AriFetch
 
     def file_date(file)
       DateTime.strptime(file.to_s, "VehicleInformation%m_%d_%Y_%H_%M_%S_%p.xml") rescue DateTime.new
+    end
+
+    def filter!
+      @files = map_to_file_name.select{ |e| !useless_files.include?(e) && e.match(/\.xml\Z/) }
+      self
+    end
+
+    # reverse implies latest date will come first
+    def sort!(reverse=false)
+      @files = files.sort {|f1, f2| file_date(f1) <=> file_date(f2) }
+      @files = files.reverse if reverse
+      self
     end
 
   end

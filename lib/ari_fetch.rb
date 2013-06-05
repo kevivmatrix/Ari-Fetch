@@ -35,7 +35,7 @@ module AriFetch
 
     def fetch!
       login
-      AriFetch::Files.new(ftp_instance.list()).filter!.sort!(reverse?)
+      AriFetch::Files.new(ftp_instance.list()).filtered_files_in_order(reverse?)
     end
 
     def login
