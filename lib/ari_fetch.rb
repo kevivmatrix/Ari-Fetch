@@ -31,13 +31,6 @@ module AriFetch
       unread_files.first(how_many).map {|file| AriFetch::AriReadFile.where(name: file).first_or_create(data_read: false).fetch_data(ftp_instance, include_cancel?) }.flatten!
     end
 
-    private
-
-    def fetch!
-      login
-      AriFetch::Files.new(ftp_instance.list()).filtered_files_in_order(reverse?)
-    end
-
     def login
       ftp_instance.connect(ftp_url, 21)
       ftp_instance.login(username, password)
@@ -47,6 +40,13 @@ module AriFetch
 
     def ftp_instance
       @ftp_instance ||= Net::FTP.new
+    end
+
+    private
+
+    def fetch!
+      login
+      AriFetch::Files.new(ftp_instance.list()).filtered_files_in_order(reverse?)
     end
 
     def include_cancel?
