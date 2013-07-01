@@ -28,4 +28,3 @@ TODO: Write usage instructions here
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 this is a part of sample branch's code!
-another change
